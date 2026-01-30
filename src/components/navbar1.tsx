@@ -69,7 +69,7 @@ const Navbar = ({
     },
     {
       title:"About",
-      url:"/aobut"
+      url:"/about"
     },
     {
       title:"Contact",
