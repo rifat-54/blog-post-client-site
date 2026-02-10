@@ -1,11 +1,12 @@
-import React from 'react';
+import { RegisterForm } from "@/components/modules/authentication/register-form";
 
-const SignupPage = () => {
-    return (
-        <div>
-            <h1>this is signup page</h1>
-        </div>
-    );
-};
 
-export default SignupPage;
+export default function Page() {
+  return (
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <RegisterForm/>
+      </div>
+    </div>
+  )
+}
