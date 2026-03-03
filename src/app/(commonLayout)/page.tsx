@@ -1,11 +1,12 @@
-import { authClient } from '@/lib/auth-client'
-import React from 'react'
+import { userService } from '@/services/user.service'
 
 export default async function HomePage() {
 
-  const session=await authClient.getSession()
+  const{data}=await userService.getSession()
 
-  console.log(session)
+  console.log("data",data)
+
+
   return (
     <div>HomePage</div>
   )
