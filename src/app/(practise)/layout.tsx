@@ -3,11 +3,11 @@ import Link from "next/link";
 export default function PracticeLayout({
   children,
   marketingSlot,
-  salesSlot,
+  laselSlot,
 }: {
   children: React.ReactNode;
   marketingSlot: React.ReactNode;
-  salesSlot: React.ReactNode;
+  laselSlot: React.ReactNode;
 }) {
   return (
     <div>
@@ -31,7 +31,7 @@ export default function PracticeLayout({
 
       <div className="flex">
         {marketingSlot}
-        {salesSlot}
+        {laselSlot}
       </div>
 
       {children}
