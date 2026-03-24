@@ -10,8 +10,8 @@ export default async function HomePage() {
   // console.log("data",data)
 
   const {data}=await blogService.getBlogPosts({
-    isFeatured:true,
-    search:"qweqqw"
+    isFeatured:false
+    // search:"qweqqw"
   },{
     // cache:"no-store",
     revalidate:10
