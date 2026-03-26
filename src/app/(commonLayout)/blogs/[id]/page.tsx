@@ -5,8 +5,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { blogService } from "@/services/blog.service";
+import { BlogPost } from "@/types";
 
+// export const dynamicParams=false;
 
+export async function generateStaticParams() {
+  const {data}=await blogService.getBlogPosts()
+
+  return data?.data?.map((blog:BlogPost)=>({id:blog.id})).splice(0,4)
+}
 
 export default async function BlogPage({params}:{params:Promise<{id:string}>}) {
 
@@ -18,6 +25,8 @@ export default async function BlogPage({params}:{params:Promise<{id:string}>}) {
     console.log(id)
 
     const {data:blog}=await blogService.getBlogById(id)
+
+  
 
     console.log(blog)
 
