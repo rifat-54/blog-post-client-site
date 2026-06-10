@@ -16,15 +16,24 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 
 import * as z from "zod";
+  const handleGoogleLogin=async()=>{
+    const data=await authClient.signIn.social({
+      provider:"google",
+      callbackURL:"http://localhost:3000",
+    })
+    console.log("data",data)
+  }
 
 const formSchema = z.object({
   name: z.string().min(1, "This field is required"),
   password: z.string().min(8, "Minimum lenght is 8"),
-  email: z.email(),
+  email: z.email()
 });
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
@@ -38,7 +47,22 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      const toastId=toast.loading("Creating User")
+      try {
+        const{data,error}=await authClient.signUp.email(value)
+        if(error){
+          toast.error(error.message,{id:toastId})
+          return;
+        }
+
+        toast.success("User Created Successfully",{id:toastId})
+
+        
+      } catch (error) {
+        toast.error("Someting Went Wrong.Try Again",{id:toastId})
+        
+      }
+
     },
   });
 
@@ -126,60 +150,22 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
               }}
             ></form.Field>
           </FieldGroup>
+          
 
-          {/* <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-              <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email
-                with anyone else.
-              </FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
-              <FieldDescription>
-                Must be at least 8 characters long.
-              </FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="confirm-password">
-                Confirm Password
-              </FieldLabel>
-              <Input id="confirm-password" type="password" required />
-              <FieldDescription>Please confirm your password.</FieldDescription>
-            </Field>
-            <FieldGroup>
-              <Field>
-                <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
-                <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="#">Sign in</a>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </FieldGroup> */}
-
-          {/* <Button type="submit">Submit</Button> */}
+          
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button form="register-form" type="submit">
+      <CardFooter className="flex justify-end flex-col gap-3">
+        <Button className="w-full" form="register-form" type="submit">
           Submit
         </Button>
+        <Button className="w-full" onClick={()=>handleGoogleLogin()} variant="outline" type="button">
+                  Login with Google
+                </Button>
       </CardFooter>
+      <FieldDescription className="text-center">
+                        Don&apos;t have an account? <a href="#">Sign up</a>
+                      </FieldDescription>
     </Card>
   );
 }

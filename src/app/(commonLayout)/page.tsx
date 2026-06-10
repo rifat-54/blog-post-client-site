@@ -2,12 +2,27 @@ import BlogCard from '@/components/modules/homepage/BlogCard'
 import { blogService } from '@/services/blog.service'
 import { userService } from '@/services/user.service'
 import { BlogPost } from '@/types'
+import { cookies } from 'next/headers'
 
 export default async function HomePage() {
 
-  // const{data}=await userService.getSession()
+  const cookieStore=await cookies()
+  console.log(cookieStore)
 
-  // console.log("data",data)
+  const res=await fetch("http://localhost:5000/api/auth/get-session",{
+    headers:{
+      Cookie:cookieStore.toString()
+    },
+    cache:"no-store"
+  })
+
+  const session=await res.json()
+
+  // console.log("session -> ",session)
+
+  // const{data:sessionData}=await userService.getSession()
+
+  // console.log("data",sessionData)
 
   const {data}=await blogService.getBlogPosts({
     isFeatured:false
