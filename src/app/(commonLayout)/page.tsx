@@ -18,7 +18,7 @@ export default async function HomePage() {
 
   const session=await res.json()
 
-  // console.log("session -> ",session)
+  console.log("session from server page -> ",session)
 
   // const{data:sessionData}=await userService.getSession()
 
