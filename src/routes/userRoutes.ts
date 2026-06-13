@@ -1,3 +1,6 @@
+import { url } from "inspector";
+import { title } from "process";
+
 export const userRoutes=[
     {
       title: "user routes",
@@ -8,12 +11,12 @@ export const userRoutes=[
           url:"/"
         },
         {
-          title:"Analytics",
-          url:"/dashboard/analytics"
+          title:"Dashboard",
+          url:"/dashboard"
         },
         {
-          title:"user Dashboard",
-          url:"/dashboard"
+          title:"Create Blog",
+          url:"/dashboard/create-blog"
         }
        
       ],

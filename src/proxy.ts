@@ -9,7 +9,7 @@ export async function proxy(request:NextRequest){
     let isAuthenticated = false;
     let isAdmin =false;
 
-
+console.log("hi dashboard")
 
     const {data}=await userService.getSession()
 
