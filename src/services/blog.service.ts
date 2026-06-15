@@ -8,7 +8,8 @@ const API_URL = env.API_URL;
 interface GetBlogParams {
   isFeatured?: boolean;
   search?: string;
-  page?:string
+  page?: string;
+  limit?:string | number
 }
 
 interface ServiceOptions {
@@ -16,10 +17,10 @@ interface ServiceOptions {
   revalidate?: number;
 }
 
-interface BlogData{
-  title:string,
-  content:string,
-  tags?:string[]
+interface BlogData {
+  title: string;
+  content: string;
+  tags?: string[];
 }
 
 export const blogService = {
@@ -50,7 +51,7 @@ export const blogService = {
         config.next = { revalidate: options.revalidate };
       }
 
-      config.next={...config.next,tags:["blogPosts"]}
+      config.next = { ...config.next, tags: ["blogPosts"] };
 
       console.log(url.toString());
 
@@ -65,36 +66,41 @@ export const blogService = {
   getBlogById: async function (id: string) {
     try {
       const res = await fetch(`${API_URL}/posts/${id}`);
-      const data =await res.json();
+      const data = await res.json();
 
       return { data: data, error: null };
     } catch (error) {
       return { data: null, error: { message: "something went wrong " } };
     }
   },
-  createBlog:async function(blogData:BlogData){
-    console.log(blogData)
+  createBlog: async function (blogData: BlogData) {
+    console.log(blogData);
     try {
-      const cookieStore=await cookies()
-      const res=await fetch(`${API_URL}/posts`,{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          Cookie:cookieStore.toString()
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/posts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
         },
-        body:JSON.stringify(blogData)
-      })
+        body: JSON.stringify(blogData),
+      });
 
-      console.log("res from service>",res)
-      const data=await res.json()
-      if(data.error){
-        return {data:null,error:{message:data.error || "Post not created"}}
+      console.log("res from service>", res);
+      const data = await res.json();
+      if (data.error) {
+        return {
+          data: null,
+          error: { message: data.error || "Post not created" },
+        };
       }
-      console.log("from service > ",data)
-      return {data,error:null}
+      console.log("from service > ", data);
+      return { data, error: null };
     } catch (err) {
-      return {data:null,error:{message:"Something went wrong",error:err}}
+      return {
+        data: null,
+        error: { message: "Something went wrong", error: err },
+      };
     }
-  }
+  },
 };
-
