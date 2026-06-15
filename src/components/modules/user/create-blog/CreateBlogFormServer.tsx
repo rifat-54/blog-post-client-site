@@ -11,12 +11,15 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/env";
+import { revalidateTag, updateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
+import { toast } from "sonner";
 
 const API_URL=env.API_URL
 
-export default function CreateBlogFormServer() {
+export default async function CreateBlogFormServer() {
   const createBlog = async (formData: FormData) => {
     "use server";
 
@@ -32,7 +35,7 @@ export default function CreateBlogFormServer() {
         tags:tags.split(",").map((item)=>item.trim()).filter((item)=>item!="")
     }
 
-    const res=await fetch(`${API_URL}/posts`,{
+    const res=await fetch(`${API_URL}/posts`,{ 
         method:"POST",
         headers:{
             "Content-Type":"application/json",
@@ -41,8 +44,19 @@ export default function CreateBlogFormServer() {
         body:JSON.stringify(blogData)
     })
 
-    console.log(res)
+    // console.log(res)
 
+    // toast.success("Successfully crated!")
+
+    // if(res.status){
+    //     redirect("/dashboard/create-blog?success")
+    // }
+
+    if(res.ok){
+      revalidateTag("blogPosts","max")    //! steal revalidate and when user come than new fatch
+
+      // updateTag("blogposts")    // ! change emedately
+    }
 
 
   };
@@ -56,7 +70,7 @@ export default function CreateBlogFormServer() {
         <form id="blog-form" action={createBlog}>
           <FieldGroup>
             <Field>
-              <FieldLabel>Title</FieldLabel>
+              <FieldLabel htmlFor="title">Title</FieldLabel>
               <Input type="text" name="title"  required/>
             </Field>
 
